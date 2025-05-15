@@ -97,7 +97,7 @@ class TextEditor:
             with open(file_opened, 'r') as file:
                 self.text_area.insert(1.0, "end")
     
-    def open_file(self, *args):
+    def open_file(self):
         file_opened = askopenfilename()
         if file_opened:
             self.text_area.delete(1.0, "end")
@@ -105,11 +105,10 @@ class TextEditor:
                 self.text_area.insert(1.0, file.read())
     
     def save_file(self):
-        file_selected = asksaveasfilename()
+        file_selected = asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt"), ("All files", "*.*")])
         if file_selected:
-            self.text_area.delete(1.0, "end")
-            with open(file_selected, 'r') as file:
-                self.text_area.insert(1.0, file.read())
+            with open(file_selected, 'w') as file:
+                file.write(self.text_area.get("1.0", "end-1c"))
     
     def save_state(self):
         """
