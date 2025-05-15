@@ -8,7 +8,17 @@ from tkinter import messagebox
 class TextEditor:
     def __init__(self, root):
         self.root = root
-        self.root.title("Editor with Undo/Redo")
+        self.root.title("Text Editor")
+
+        # Customization
+        self.root.geometry("750x750")
+        # Trying to insert an ico
+        try:
+            self.root.iconbitmap("folder.ico")
+        except tk.TclError:
+            print("We couldn't load the ico image, let's use the default one")
+        
+        """self.root.resizable(False, False) if u want it"""
 
         # Stacks for undo and redo operations
         self.undo_stack = []
@@ -44,9 +54,6 @@ class TextEditor:
             menu_contx.tk_popup(event.x_root, event.y_root)
         
         self.root.bind("<Button-3>", show_menu_contx)        
-        # Customization
-        self.root.geometry("750x750")
-        """self.root.resizable(False, False) if u want it"""
 
         # Graphical user interface
         self.text_area = ScrolledText(root, wrap='word', undo=False, padx=15, pady=10, font = ("Times New Roman", 14, "italic"))
