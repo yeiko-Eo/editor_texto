@@ -33,7 +33,7 @@ class TextEditor:
         menu_file.add_command(label="Open", command=self.open_file)
         menu_file.add_command(label="Save", command=self.save_file)
         menu_file.add_command(label="Delete", command=self.delete_file)
-        menu_file.add_command(label="New", command=self.new_file)
+        menu_file.add_command(label="Exit", command=self.exit)
 
         # Adding Undo and Redo to the menu bar
         menu_edit = tk.Menu(menu_bar, tearoff=0)
@@ -56,7 +56,7 @@ class TextEditor:
         self.root.bind("<Button-3>", show_menu_contx)        
 
         # Graphical user interface
-        self.text_area = ScrolledText(root, wrap='word', undo=False, padx=15, pady=10, font = ("Times New Roman", 14, "italic"))
+        self.text_area = ScrolledText(root, wrap='word', undo=False, padx=15, pady=10, font = ("Times New Roman", 14))
         self.text_area.pack(expand=True, fill='both') # Only if resizable is desactivated
 
         # Event to detect changes in the text
@@ -73,6 +73,14 @@ class TextEditor:
         
     def paste(self):
         self.text_area.event_generate("<<Paste>>")   
+        
+        
+    def exit(self):
+        save_changes = messagebox.askyesno("Closing...", "Don't you want to save your changes?")
+        if save_changes:
+            self.save_file()
+            messagebox.showinfo("Saved!", "Your changes have been saved")
+    
         
     def delete_file(self):
         """
