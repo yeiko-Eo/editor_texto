@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import filedialog
 from tkinter.scrolledtext import ScrolledText
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 import os
@@ -64,6 +65,9 @@ class TextEditor:
 
         # Save the initial state of the text area
         self.save_state()
+        
+        # Protocol
+        self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
     
     def copy(self):
         self.text_area.event_generate("<<Copy>>")
@@ -80,19 +84,23 @@ class TextEditor:
         if save_changes:
             self.save_file()
             messagebox.showinfo("Saved!", "Your changes have been saved")
+        else:
+            self.root.destroy()
     
-        
     def delete_file(self):
         """
         Delete a selected file from the file system.
         """
-        file_to_delete = askopenfilename()
+        messagebox.showinfo("Instruction", "Choose the file you want to delete")
+        file_to_delete = filedialog.askopenfilename(title="Select File to Delete")
         if file_to_delete:
-            try:
-                os.remove(file_to_delete)
-                tk.messagebox.showinfo("Success", "File deleted successfully.")
-            except Exception as e:
-                tk.messagebox.showerror("Error", f"An error occurred: {e}")
+            confirm = messagebox.askyesno("Confirm Delete", f"Are you sure you want to delete:\n{file_to_delete}?")
+            if confirm:
+                try:
+                    os.remove(file_to_delete)
+                    messagebox.showinfo("Success", "File deleted successfully.")
+                except Exception as e:
+                    messagebox.showerror("Error", f"An error occurred while deleting the file:\n{e}")
         
     def new_file(self):
         """
@@ -164,7 +172,17 @@ class TextEditor:
         self.text_area.delete("1.0", tk.END)  # Clear the text area
         self.text_area.insert(tk.END, text)  # Insert the new text
 
-
+    # Warn the user when attempting to close the window
+    
+    def on_closing(self):
+        save_changes = messagebox.askyesno("Exit", "Do you want to save your changes before exiting?")
+        if save_changes:
+                self.save_file()
+                messagebox.showinfo("Saved!", "Your changes have been saved.")
+                self.root.destroy()
+        else:
+            self.root.destroy()        
+    
 # Run the application
 if __name__ == "__main__":
     root = tk.Tk()
