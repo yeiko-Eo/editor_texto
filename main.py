@@ -90,11 +90,12 @@ class TextEditor:
             with open(file_opened, 'r') as file:
                 self.text_area.insert(1.0, "end")
     
-    def open_file(self):
-        file_opened = asksaveasfilename()
+    def open_file(self, *args):
+        file_opened = askopenfilename()
         if file_opened:
-            with open(file_opened, 'w') as file:
-                file.write(self.text_area.get(1.0, "end"))  
+            self.text_area.delete(1.0, "end")
+            with open(file_opened, 'r') as file:
+                self.text_area.insert(1.0, file.read())
     
     def save_file(self):
         file_selected = asksaveasfilename()
